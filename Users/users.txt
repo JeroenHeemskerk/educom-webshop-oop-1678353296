@@ -1,0 +1,20 @@
+[email]|[naam]|[wachtwoord]
+coach@man-kind.nl|Geert Weggemans|halt!
+lvangammeren@gmail.com|Lydia van Gammeren|123
+b@email.com|Lydia van Gammeren|Katf.pD.X!vv5
+test@test.nl|Testpersoon|123
+bar@hotmail.com|Barry|123
+test@mail.com|Lenna|123
+testing@nep.com|Lydia|123
+nogeen@email.nl|Bo Burnham|123
+bob@eigenemail.nu|Bobby|123
+kit@ookeenemail.nl|Kitten|456
+co@co.nl|Coby|123
+persoon@mail.com|persoon|123
+tester@v.com|Lydia van Gammeren|123
+rem@art.com|rembrandt|123
+beertje@boem.nl|beer|123
+panda@zeldzaam.nl|panda|123
+wasbeer@leuk.nl|wasbeer|123
+lvangammeren@yahoo.co.uk|Lydia van Gammeren|123
+lvangammeren@yahoo.co.uk|Lydia van Gammeren|123
