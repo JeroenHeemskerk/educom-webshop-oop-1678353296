@@ -1,6 +1,5 @@
 <?php
 
-include_once 'user_service.php';
 define("SALUTATIONS", array("mrs" => "Mrs.", "ms" => "Ms.", "mx" => "Mx.", "mr" => "Mr."));
 define("COM_PREFS", array("phone" => "phone", "email" => "email"));
 
@@ -106,6 +105,8 @@ function validateContact()
 
 function validateRegistration()
 {
+    include_once 'user_service.php';
+
     // initate the variables     
 
     $data = array(
@@ -153,7 +154,7 @@ function validateRegistration()
 
 function validateLogin()
 {
-
+    include_once 'user_service.php';
     // initiate the variables     
 
     $data = array(
@@ -198,6 +199,8 @@ function validateLogin()
 
 function validateChangePassword()
 {
+    include_once 'user_service.php';
+
     $data = array(
         "id" => getLoggedInUserId(), "password" => "",
         "newPassword" => test_input(getPostVar("newPassword")), "passwordErr" => "",
