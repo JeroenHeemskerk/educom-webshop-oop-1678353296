@@ -1,6 +1,7 @@
 <?php
 
 include_once 'forms.php';
+include_once 'db_repository.php';
 
 function getWebshopProducts()
 {

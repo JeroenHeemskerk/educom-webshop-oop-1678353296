@@ -5,7 +5,7 @@ $data = array(
     "page" => "productdetail", "genericErr" => "", 'menu' => array(
         'home' => 'Home', 'about' => 'About',
     ), 'product' => array(
-        'id' => '5', 'name' => 'Product', 'filename_img' => 'Test.jpg',
+        'id' => '5', 'name' => 'Product', 'filename_img' => '../../Images/featherwand.jpg',
         'description' => 'Dummy Description', 'price' => '$55',
     )
 );

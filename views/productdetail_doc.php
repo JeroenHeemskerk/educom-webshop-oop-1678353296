@@ -1,6 +1,6 @@
 <?php
 
-include_once "products_doc.php";
+require_once "products_doc.php";
 
 
 class ProductDetailDoc extends ProductsDoc

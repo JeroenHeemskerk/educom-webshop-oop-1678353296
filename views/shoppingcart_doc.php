@@ -1,12 +1,12 @@
 <?PHP
 
-include_once "basic_doc.php";
+require_once "products_doc.php";
 
 
-class ShoppingCartDoc extends BasicDoc
+class ShoppingCartDoc extends ProductsDoc
 {
 
-    function showContent($data)
+    protected function showContent($data)
     {
         echo '<class="products">';
         if (($data['shoppingcartproducts'])) {
@@ -25,7 +25,7 @@ class ShoppingCartDoc extends BasicDoc
                 echo '<div class="subtotal"><p> Subtotal: &euro;'
                     . $product['subtotal'] . '</p></div><br>';
                 echo '</div>';
-                addAction(
+                $this->addAction(
                     'shoppingcart',
                     '+',
                     'updateShoppingCart',
@@ -33,7 +33,7 @@ class ShoppingCartDoc extends BasicDoc
                     $product['name'],
                     1
                 );
-                addAction(
+                $this->addAction(
                     'shoppingcart',
                     '-',
                     'updateShoppingCart',
@@ -44,7 +44,7 @@ class ShoppingCartDoc extends BasicDoc
             }
             echo '<div class="total">';
             echo '<p>Total: &euro;' . $data['total'] .  '</p>';
-            addAction('home', 'ORDER', 'order');
+            //addAction('home', 'ORDER', 'order');
             echo '</div> ' . PHP_EOL;
         } else {
             echo '<p>' . $data['genericErr'] . '</p>';
