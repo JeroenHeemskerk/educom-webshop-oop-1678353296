@@ -178,51 +178,73 @@ function findProductById($productId)
     }
 }
 
-function saveOrder($user_id, $shoppingcartproducts)
+// ----------------------------------------------------------------
+
+function insertOrder($conn, $userId)
+{
+    $orderNr = date("Y") . "000000";
+    $sql = "INSERT INTO orders (userId, date, orderNr) 
+      VALUES ('$userId', CURRENT_DATE(), '$orderNr')";
+    $result = mysqli_query($conn, $sql);
+    if (!$result) {
+        throw new Exception("Save order insert userid and currentdate failed" . $sql . mysqli_error($conn));
+    }
+    $orderId = mysqli_insert_id($conn);
+    return $orderId;
+}
+
+function getMaxOrderNr($conn)
+{
+    $sql = "SELECT max(orderNr) as maxOrdernumber from orders";
+    $result = mysqli_query($conn, $sql);
+    if (!$result) {
+        throw new Exception("find max ordernr failed, SQL: " . $sql . "Error: " . mysqli_error($conn));
+    }
+    $row = mysqli_fetch_array($result);
+    $maxOrderNr = $row[0];
+    return $maxOrderNr;
+}
+
+function updateOrderNr($conn, $orderId, $updatedOrderNr)
+{
+    $sql = "UPDATE orders SET orderNr = $updatedOrderNr WHERE id = '$orderId'";
+    $result = mysqli_query($conn, $sql);
+    if (!$result) {
+        throw new Exception("Update ordernr failed, SQL: " . $sql . "Error: " . mysqli_error($conn));
+    }
+}
+
+function insertOrderLines($conn, $orderId, $shoppingcartproducts)
+{
+    foreach ($shoppingcartproducts as $product) {
+        $sql = "INSERT INTO order_products (orderId, productId, quantity)
+        VALUES ($orderId, " . $product['productId'] . "," . $product['quantity'] . ")";
+        $result = mysqli_query($conn, $sql);
+        if (!$result) {
+            throw new Exception("Insert into order products failed, SQL: " . $sql . "Error: " . mysqli_error($conn));
+        }
+    }
+}
+
+
+function saveOrder($userId, $shoppingcartproducts)
 {
     $conn = connectWithDB();
     try {
         // start a transaction so the queries only get executed if everything goes well
         mysqli_autocommit($conn, FALSE);
+
         // 1. insert order
-        $order_nr = date("Y") . "000000";
-        $sql = "INSERT INTO orders (user_id, date, order_nr) 
-        VALUES ('$user_id', CURRENT_DATE(), '$order_nr')";
-        $result = mysqli_query($conn, $sql);
-        if (!$result) {
-            throw new Exception("Save order insert userid and currentdate failed" . $sql . mysqli_error($conn));
-        }
-
-        $order_id = mysqli_insert_id($conn);
-
-        // 2. find max ordernumber
-        $sql = "SELECT max(order_nr) as max_ordernumber from orders";
-        $result = mysqli_query($conn, $sql);
-        if (!$result) {
-            throw new Exception("find max ordernr failed, SQL: " . $sql . "Error: " . mysqli_error($conn));
-        }
-        $row = mysqli_fetch_array($result);
-        $maxOrderNr = $row[0];
-        $updatedOrderNr = $maxOrderNr + 1;
-
+        $orderId = insertOrder($conn, $userId);
+        // 2. find max ordernumber 
+        $maxOrderNr = getMaxOrderNr($conn);
         // 3. update current record with ordernr + 1
-        $sql = "UPDATE orders SET order_nr = $updatedOrderNr WHERE id = '$order_id'";
-        $result = mysqli_query($conn, $sql);
-        if (!$result) {
-            throw new Exception("Update ordernr failed, SQL: " . $sql . "Error: " . mysqli_error($conn));
-        }
-
+        updateOrderNr($conn, $orderId, $maxOrderNr + 1);
         // 4. insert order products
-        foreach ($shoppingcartproducts as $product) {
-            $sql = "INSERT INTO order_products (order_id, product_id, quantity)
-            VALUES ($order_id, " . $product['productId'] . "," . $product['quantity'] . ")";
-            $result = mysqli_query($conn, $sql);
-            if (!$result) {
-                throw new Exception("Insert into order products failed, SQL: " . $sql . "Error: " . mysqli_error($conn));
-            }
-        }
+        insertOrderLines($conn, $orderId, $shoppingcartproducts);
+
         if (!mysqli_commit($conn)) { // stop the transaction if any query fails, then throw an exception
-            throw new Exception("saveOrder commit failed, SQL: " . $sql . "Error: " . mysqli_error($conn));
+            throw new Exception("saveOrder commit failed. Error: " . mysqli_error($conn));
         }
     } catch (Exception $e) { // undo transaction and re-throw exception
         mysqli_rollback($conn);
@@ -238,9 +260,9 @@ function getTopFive()
     try {
         $sql = "SELECT p.id, p.name, p.price, p.filename_img, SUM(op.quantity) AS quantity
         FROM products p
-        LEFT JOIN order_products op ON p.id=op.product_id
-        LEFT JOIN orders o ON op.order_id=o.id
-        AND DATEDIFF(CURRENT_DATE(), o.date) < 7
+        LEFT JOIN order_products op ON p.id=op.productId
+        LEFT JOIN orders o ON op.orderId=o.id
+        AND o.date >= DATE_ADD(CURRENT_DATE(), INTERVAL -7 DAY)
         GROUP BY p.id
         ORDER BY quantity DESC
         LIMIT 5";

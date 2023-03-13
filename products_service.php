@@ -68,9 +68,9 @@ function handleActions()
             removeFromShoppingcart($productId);
             break;
         case 'order':
-            $user_id = getLoggedInUserId();
+            $userId = getLoggedInUserId();
             $data = getShoppingcartProducts();
-            $data = storeOrder($user_id, $data['shoppingcartproducts']);
+            $data = storeOrder($userId, $data['shoppingcartproducts']);
             emptyShoppingCart();
             break;
     }
@@ -104,9 +104,9 @@ function getShoppingcartProducts()
     return array("shoppingcartproducts" => $shoppingcartproducts, "total" => number_format((float)($total), 2), "genericErr" => $genericErr);
 }
 
-function storeOrder($user_id, $shoppingcartproducts)
+function storeOrder($userId, $shoppingcartproducts)
 {
-    saveOrder($user_id, $shoppingcartproducts);
+    saveOrder($userId, $shoppingcartproducts);
 }
 
 function getTopProducts()
