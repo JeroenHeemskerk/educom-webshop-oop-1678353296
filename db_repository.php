@@ -33,12 +33,7 @@ function findUserByEmail($email)
         if (!$result) {
             throw new Exception("Find user by email failed " . mysqli_error($conn));
         }
-        if (mysqli_num_rows($result) > 0) {
-            while ($row = mysqli_fetch_assoc($result)) {
-                $user = $row;
-                debug_to_console($user);
-            }
-        }
+        $user = mysqli_fetch_assoc($result);
     } finally {
         mysqli_close($conn);
     }
@@ -58,11 +53,9 @@ function findUserById($id)
         if (!$result) {
             throw new Exception("Find user by id failed" . mysqli_error($conn));
         }
-        if (mysqli_num_rows($result) > 0) {
-            while ($row = mysqli_fetch_assoc($result)) {
-                $user = $row;
-                debug_to_console($user);
-            }
+        while ($row = mysqli_fetch_assoc($result)) {
+            $user = $row;
+            debug_to_console($user);
         }
     } finally {
         mysqli_close($conn);
@@ -114,13 +107,11 @@ function checkIfAdmin($id)
         if (!$result) {
             throw new Exception("Find user by id failed" . mysqli_error($conn));
         }
-        if (mysqli_num_rows($result) > 0) {
-            while ($row = mysqli_fetch_assoc($result)) {
-                if ($row['isadmin'] == "yes") {
-                    $isadmin = "true";
-                    debug_to_console($row['isadmin']);
-                };
-            }
+        while ($row = mysqli_fetch_assoc($result)) {
+            if ($row['isadmin'] == "yes") {
+                $isadmin = "true";
+                debug_to_console($row['isadmin']);
+            };
         }
     } finally {
         mysqli_close($conn);
@@ -144,11 +135,9 @@ function getAllProducts()
         if (!$result) {
             throw new Exception("Get all products failed " . mysqli_error($conn));
         }
-        if (mysqli_num_rows($result) > 0) {
-            while ($row = mysqli_fetch_assoc($result)) {
-                $product = $row;
-                $products[$product['id']] = $product;
-            }
+        while ($row = mysqli_fetch_assoc($result)) {
+            $product = $row;
+            $products[$product['id']] = $product;
         }
     } finally {
         mysqli_close($conn);
@@ -169,9 +158,7 @@ function findProductById($productId)
             throw new Exception("findProductById failed, SQL: " . $sql .
                 "Error: " . mysqli_error($conn));
         }
-        if (mysqli_num_rows($result) > 0) {
-            $product = mysqli_fetch_assoc($result);
-        }
+        $product = mysqli_fetch_assoc($result);
         return $product;
     } finally {
         mysqli_close($conn);
@@ -271,11 +258,9 @@ function getTopFive()
         if (!$result) {
             throw new Exception("Get top five failed, SQL: " . $sql . "Error: " . mysqli_error($conn));
         }
-        if (mysqli_num_rows($result) > 0) {
-            while ($row = mysqli_fetch_assoc($result)) {
-                $topproduct = $row;
-                $topproducts[$topproduct['id']] = $topproduct;
-            }
+        while ($row = mysqli_fetch_assoc($result)) {
+            $topproduct = $row;
+            $topproducts[$topproduct['id']] = $topproduct;
         }
     } finally {
         mysqli_close($conn);
