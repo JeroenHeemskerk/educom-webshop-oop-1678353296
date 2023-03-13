@@ -58,20 +58,20 @@ function validateContact()
     // initate the variables   
 
     $data = array(
-        "salutation" => test_input(getPostVar("salutation")), "name" => "",
-        "email" => "", "phone" => test_input(getPostVar("phone")),
-        "contactOption" => test_input(getPostVar("contactOption")),
-        "message" => test_input(getPostVar("message")),
-        "nameErr" => "", "emailErr" => "", "phoneErr" => "",
-        "contactOptionErr" => "", "messageErr" => "", "genericErr" => "",
-        "valid" => false
+        "salutation" => "", "salutationErr" => "",  "name" => "",  "nameErr" => "",
+        "email" => "", "emailErr" => "",  "phone" => "", "phoneErr" => "",
+        "contactOption" => "", "contactOptionErr" => "",   "message" => "", "messageErr" => "",
+        "genericErr" => "",  "valid" => false
     );
 
     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         $data = array_merge($data, validateName());
-
         $data = array_merge($data, validateEmail());
+        $data["salutation"] = test_input(getPostVar("salutation"));
+        $data["phone"] = test_input(getPostVar("phone"));
+        $data["contactOption"] = test_input(getPostVar("contactOption"));
+        $data["message"] = test_input(getPostVar("message"));
 
         if (empty($data['phone'])) {
             $data['phoneErr'] = "Phone is required";
