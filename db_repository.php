@@ -182,7 +182,8 @@ function saveOrder($user_id, $shoppingcartproducts)
 {
     $conn = connectWithDB();
     try {
-
+        // start a transaction so the queries only get executed if everything goes well
+        mysqli_autocommit($conn, FALSE);
         // 1. insert order
         $order_nr = date("Y") . "000000";
         $sql = "INSERT INTO orders (user_id, date, order_nr) 
@@ -220,6 +221,12 @@ function saveOrder($user_id, $shoppingcartproducts)
                 throw new Exception("Insert into order products failed, SQL: " . $sql . "Error: " . mysqli_error($conn));
             }
         }
+        if (!mysqli_commit($conn)) { // stop the transaction if any query fails, then throw an exception
+            throw new Exception("saveOrder commit failed, SQL: " . $sql . "Error: " . mysqli_error($conn));
+        }
+    } catch (Exception $e) { // undo transaction and re-throw exception
+        mysqli_rollback($conn);
+        throw $e;
     } finally {
         mysqli_close($conn);
     }
