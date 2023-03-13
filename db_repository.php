@@ -266,13 +266,13 @@ function getTopFive()
         GROUP BY p.id
         ORDER BY quantity DESC
         LIMIT 5";
-        $result['topproducts'] =  mysqli_query($conn, $sql);
+        $result =  mysqli_query($conn, $sql);
         $topproducts = array();
         if (!$result) {
             throw new Exception("Get top five failed, SQL: " . $sql . "Error: " . mysqli_error($conn));
         }
-        if (mysqli_num_rows($result['topproducts']) > 0) {
-            while ($row = mysqli_fetch_assoc($result['topproducts'])) {
+        if (mysqli_num_rows($result) > 0) {
+            while ($row = mysqli_fetch_assoc($result)) {
                 $topproduct = $row;
                 $topproducts[$topproduct['id']] = $topproduct;
             }
