@@ -209,6 +209,7 @@ function showHeader($page)
         case 'home':
         case 'about':
         case 'contact':
+        case 'thanks':
         case 'register':
         case 'login':
         case 'changepassword':
