@@ -6,7 +6,7 @@ include_once "basic_doc.php";
 class AboutDoc extends BasicDoc
 {
     //Override
-    function showContent()
+    protected function showContent($data)
     {
         echo '<div class="aboutme">
             <p> I\'m Lydia, and I live in Leiden with my wife Lenna and our two fur babies Bobby and Kitten</p>

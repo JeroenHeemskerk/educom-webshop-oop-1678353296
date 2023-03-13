@@ -27,6 +27,7 @@ function findUserByEmail($email)
     $user = NULL;
     $conn = connectWithDB();
     try {
+        $email = mysqli_real_escape_string($conn, $email);
         $sql = "SELECT * from users WHERE email='$email';";
         $result = mysqli_query($conn, $sql);
         if (!$result) {
@@ -51,6 +52,7 @@ function findUserById($id)
     $user = NULL;
     $conn = connectWithDB();
     try {
+        $id = mysqli_real_escape_string($conn, $id);
         $sql = "SELECT * from users WHERE id='$id';";
         $result = mysqli_query($conn, $sql);
         if (!$result) {
@@ -88,6 +90,8 @@ function changePassword($id, $password)
 {
     $conn = connectWithDB();
     try {
+        $id = mysqli_real_escape_string($conn, $id);
+        $password = mysqli_real_escape_string($conn, $password);
         $sql = "UPDATE users SET password='$password' WHERE id='$id'";
         $result = mysqli_query($conn, $sql);
         if (!$result) {
@@ -104,6 +108,7 @@ function checkIfAdmin($id)
     $isadmin = "false";
     $conn = connectWithDB();
     try {
+        $id = mysqli_real_escape_string($conn, $id);
         $sql = "SELECT * from users WHERE id='$id';";
         $result = mysqli_query($conn, $sql);
         if (!$result) {
@@ -157,7 +162,8 @@ function findProductById($productId)
     $conn = connectWithDB();
     $product = NULL;
     try {
-        $sql = "SELECT * FROM products WHERE id = $productId";
+        $productId = mysqli_real_escape_string($conn, $productId);
+        $sql = "SELECT * FROM products WHERE id = '$productId'";
         $result = mysqli_query($conn, $sql);
         if (!$result) {
             throw new Exception("findProductById failed, SQL: " . $sql .
@@ -199,7 +205,7 @@ function saveOrder($user_id, $shoppingcartproducts)
         $updatedOrderNr = $maxOrderNr + 1;
 
         // 3. update current record with ordernr + 1
-        $sql = "UPDATE orders SET order_nr = $updatedOrderNr WHERE id = $order_id";
+        $sql = "UPDATE orders SET order_nr = $updatedOrderNr WHERE id = '$order_id'";
         $result = mysqli_query($conn, $sql);
         if (!$result) {
             throw new Exception("Update ordernr failed, SQL: " . $sql . "Error: " . mysqli_error($conn));

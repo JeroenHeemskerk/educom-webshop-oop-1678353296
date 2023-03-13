@@ -74,7 +74,7 @@ class BasicDoc extends HtmlDoc
         </a>';
     }
 
-    function showContent()
+    protected function showContent($data)
     {
         echo '<p>Content</p>';
     }
@@ -97,7 +97,7 @@ class BasicDoc extends HtmlDoc
     {
         $this->showHeader($this->data['page']);
         $this->showMenu();
-        $this->showContent();
+        $this->showContent($this->data);
         $this->showFooter();
     }
 

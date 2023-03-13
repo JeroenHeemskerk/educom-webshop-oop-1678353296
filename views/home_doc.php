@@ -6,7 +6,7 @@ include_once "basic_doc.php";
 class HomeDoc extends BasicDoc
 {
     //Override
-    function showContent()
+    protected function showContent($data)
     {
         echo '<hr>
         <div class="introduction">
