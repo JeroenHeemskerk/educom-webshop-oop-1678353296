@@ -44,7 +44,7 @@ class ShoppingCartDoc extends ProductsDoc
             }
             echo '<div class="total">';
             echo '<p>Total: &euro;' . $data['total'] .  '</p>';
-            //addAction('home', 'ORDER', 'order');
+            addAction('home', 'ORDER', 'order');
             echo '</div> ' . PHP_EOL;
         } else {
             echo '<p>' . $data['genericErr'] . '</p>';

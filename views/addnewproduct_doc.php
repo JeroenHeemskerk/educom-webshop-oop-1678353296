@@ -5,6 +5,7 @@ include_once "forms_doc.php";
 
 class AddNewProductDoc extends FormsDoc
 {
+    //Override
     protected function showContent($data)
     {
         $this->showFormStart();

@@ -1,5 +1,5 @@
 <?php
-include_once "../views/registration_doc.php";
+include_once "../views/register_doc.php";
 
 $data = array(
     "page" => "register", "name" => "", "email" => "", "password" => "",
@@ -10,5 +10,5 @@ $data = array(
     )
 );
 
-$view = new RegistrationDoc($data);
-$view->show();
+$view = new RegisterDoc($data);
+$view->show($page);

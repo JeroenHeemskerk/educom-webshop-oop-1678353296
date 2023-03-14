@@ -3,7 +3,7 @@
 include_once "forms_doc.php";
 
 
-class RegistrationDoc extends FormsDoc
+class RegisterDoc extends FormsDoc
 {
     protected function showContent($data)
     {

@@ -19,12 +19,12 @@ abstract class ProductsDoc extends BasicDoc
             }
             echo '<input type="hidden" name="page" value="' . $nextpage . '">' . PHP_EOL;
             if ($addquantity !== 0) {
-                //$cart = getShoppingcart();
-                //$quantity = ((float) $addquantity + getArrayVar($cart, $productId, 0));
-                //echo '<input type="hidden" name="quantity" value="' . $quantity . '">' . PHP_EOL;
-                //if ($quantity == 0) {
-                //     echo '<input type="hidden" name="action" value="removeFromShoppingcart">' . PHP_EOL;
-                // }
+                $cart = getShoppingcart();
+                $quantity = ((float) $addquantity + (float) getArrayVar($cart, $productId, 0));
+                echo '<input type="hidden" name="quantity" value="' . $quantity . '">' . PHP_EOL;
+                if ($quantity == 0) {
+                    echo '<input type="hidden" name="action" value="removeFromShoppingcart">' . PHP_EOL;
+                }
             }
 
             echo '<fieldset>              

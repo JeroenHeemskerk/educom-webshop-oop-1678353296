@@ -16,12 +16,12 @@ class BasicDoc extends HtmlDoc
 
 
     // Override 
-    function showHeadContent()
+    function showHeadContent($page)
     {
         echo ' 
-        <title>BasicDoc Title</title>
-        <link rel="stylesheet" href="../css/style.css">
-        <link rel="icon" type="image/x-icon" href="../css/favicon.ico">';
+        <title>' . $page . '</title>
+        <link rel="stylesheet" href="css/style.css">
+        <link rel="icon" type="image/x-icon" href="css/favicon.ico">';
     }
 
     // Override
@@ -38,6 +38,7 @@ class BasicDoc extends HtmlDoc
             case 'home':
             case 'about':
             case 'contact':
+            case 'thanks':
             case 'register':
             case 'login':
             case 'changepassword':

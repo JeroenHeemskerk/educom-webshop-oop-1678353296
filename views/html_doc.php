@@ -2,7 +2,7 @@
 
 class HtmlDoc
 {
-  
+
   private function showBeginDocument()
   {
     echo '<!doctype html> 
@@ -14,10 +14,10 @@ class HtmlDoc
     echo '<head>';
   }
 
-  protected function showHeadContent()
+  protected function showHeadContent($page)
   {
     echo '
-    <title>HtmlDoc Title</title>';
+    <title>' . $page . '</title>';
   }
 
   private function showHeadEnd()
@@ -46,11 +46,11 @@ class HtmlDoc
     echo '</html>';
   }
 
-  public function show()
+  public function show($page)
   {
     $this->showBeginDocument();
     $this->showHeadStart();
-    $this->showHeadContent();
+    $this->showHeadContent($page);
     $this->showHeadEnd();
     $this->showBodyStart();
     $this->showBodyContent();

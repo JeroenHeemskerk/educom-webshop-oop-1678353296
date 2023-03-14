@@ -7,6 +7,7 @@ class WebshopDoc extends ProductsDoc
 {
     protected function showContent($data)
     {
+        include_once 'user_service.php';
         foreach ($data['products'] as $product) {
             echo '<div class="product"><a href="index.php?page=productdetail&id=' . $product['id'] . '">';
             echo '<h2>' . $product['name'] . '</h2>';
@@ -25,10 +26,17 @@ class WebshopDoc extends ProductsDoc
             );
             echo '</div></div></div>' . PHP_EOL;
         }
-        // if (isUserLoggedIn() && isAdministrator(getLoggedInUserId()) == 'true') {
-        //     echo '<a href="index.php?page=addnewproduct"><input type="button" value="add new product">
-        //     </a>';
-        // }
+        if (isUserLoggedIn() && isAdministrator(getLoggedInUserId()) == 'true') {
+            echo
+            '<div class="form-style-3">         
+             <fieldset>              
+             <label><div>
+             <a href="index.php?page=addnewproduct">add new product</a>
+             </div>
+             </label>                                                           
+             </fieldset>
+             </div>';
+        }
         echo '  <span class="error">' . $data['genericErr'] . '</span>';
     }
 }
