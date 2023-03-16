@@ -14,10 +14,10 @@ class HtmlDoc
     echo '<head>';
   }
 
-  protected function showHeadContent($page)
+  protected function showHeadContent()
   {
     echo '
-    <title>' . $page . '</title>';
+    <title>not found, error 404</title>';
   }
 
   private function showHeadEnd()
@@ -33,7 +33,7 @@ class HtmlDoc
 
   protected function showBodyContent()
   {
-    echo '<h1>Body Content in HtmlDoc class</h1>';
+    echo '<h1>This page does not seem to exist.</h1>';
   }
 
   protected function showBodyEnd()
@@ -46,11 +46,11 @@ class HtmlDoc
     echo '</html>';
   }
 
-  public function show($page)
+  public function show()
   {
     $this->showBeginDocument();
     $this->showHeadStart();
-    $this->showHeadContent($page);
+    $this->showHeadContent();
     $this->showHeadEnd();
     $this->showBodyStart();
     $this->showBodyContent();

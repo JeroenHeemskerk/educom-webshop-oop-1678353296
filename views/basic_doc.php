@@ -6,22 +6,36 @@ include_once "html_doc.php";
 class BasicDoc extends HtmlDoc
 {
 
-    protected $data;
+    protected $model;
 
-    public function __construct($data)
+    public function __construct($model)
     {
-        $this->data = $data;
+        $this->model = $model;
     }
 
+    private function title()
+    {
+        echo "<title>";
+        $this->showHead();
+        echo "</title>";
+    }
 
+    protected function showHead()
+    {
+        echo $this->model->page;
+    }
+
+    private function cssLinks()
+    {
+        echo '<link rel="stylesheet" href="css/style.css">
+        <link rel="icon" type="image/x-icon" href="css/favicon.ico">';
+    }
 
     // Override 
-    function showHeadContent($page)
+    function showHeadContent()
     {
-        echo ' 
-        <title>' . $page . '</title>
-        <link rel="stylesheet" href="css/style.css">
-        <link rel="icon" type="image/x-icon" href="css/favicon.ico">';
+        $this->title();
+        $this->cssLinks();
     }
 
     // Override
@@ -61,8 +75,8 @@ class BasicDoc extends HtmlDoc
 
     {
         echo '<ul class="menu"><nav>';
-        foreach ($this->data['menu'] as $link => $label) {
-            $this->showMenuItem($link, $label);
+        foreach ($this->model->menu as $MenuItem) {
+            echo $MenuItem->showMenuItem();
         }
         echo '</nav></ul>';
     }
@@ -75,7 +89,7 @@ class BasicDoc extends HtmlDoc
         </a>';
     }
 
-    protected function showContent($data)
+    protected function showContent()
     {
         echo '<p>Content</p>';
     }
@@ -96,9 +110,9 @@ class BasicDoc extends HtmlDoc
     //Override
     protected function showBodyContent()
     {
-        $this->showHeader($this->data['page']);
+        $this->showHeader($this->model->page);
         $this->showMenu();
-        $this->showContent($this->data);
+        $this->showContent();
         $this->showFooter();
     }
 

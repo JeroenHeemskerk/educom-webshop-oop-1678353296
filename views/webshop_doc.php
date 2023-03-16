@@ -5,7 +5,7 @@ include_once "products_doc.php";
 
 class WebshopDoc extends ProductsDoc
 {
-    protected function showContent($data)
+    protected function showContent()
     {
         include_once 'user_service.php';
         foreach ($data['products'] as $product) {
