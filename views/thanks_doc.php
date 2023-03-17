@@ -5,16 +5,16 @@ include_once "basic_doc.php";
 
 class ThanksDoc extends BasicDoc
 {
-    protected function showContent($data)
+    protected function showContent()
     {
         echo '
         <p>Thank you for your reply!</p>
 
-        <div>Name: ' . $data["salutation"] . " " . $data["name"] . '</div>
-        <div>Email: ' . $data["email"] . ' </div>
-        <div>Phone: ' . $data["phone"] . '</div>
-        <div>Preferred Contact Option: ' . $data["contactOption"] . '</div>
-        <div>Message: ' . $data["message"] . '</div>        
+        <div>Name: ' . $this->model->salutation . " " . $this->model->name . '</div>
+        <div>Email: ' . $this->model->email . ' </div>
+        <div>Phone: ' . $this->model->phone . '</div>
+        <div>Preferred Contact Option: ' . $this->model->contactOption . '</div>
+        <div>Message: ' . $this->model->message . '</div>        
         </div> ';
     }
 }

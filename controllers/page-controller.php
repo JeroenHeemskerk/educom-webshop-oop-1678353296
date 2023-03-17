@@ -1,20 +1,18 @@
 <?php
 
-require_once "models/page-model.php";
-
 class PageController
 {
     private $model;
 
-    public function __construct()
+    public function __construct($pageModel)
     {
-        $this->model = new PageModel(NULL);
+        $this->model = $pageModel;
     }
 
     public function handleRequest()
     {
         $this->getRequest();
-        //$this->processRequest();
+        $this->processRequest();
         $this->showResponsePage();
     }
 
@@ -30,9 +28,17 @@ class PageController
         switch ($this->model->page) {
             case "home":
             case "about":
-                require_once("models/page-model.php");
-                $this->model = new PageModel($this->model);
+                // require_once("models/page-model.php");
+                // $this->model = new PageModel($this->model);
                 //$this->model->handleActions();
+                break;
+            case 'contact':
+                require_once("models/user-model.php");
+                $this->model = new UserModel($this->model);
+                $this->model->validateContact();
+                if ($this->model->valid) {
+                    $this->model->setPage('thanks');
+                }
                 break;
         }
     }

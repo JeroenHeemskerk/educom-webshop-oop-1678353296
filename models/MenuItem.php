@@ -12,6 +12,7 @@ class MenuItem
 
     public function showMenuItem()
     {
-        return PHP_EOL . '<li><a Href="index.php?page=' . $this->page . '">' . $this->label . '</a></li>';
+        return PHP_EOL . '
+        <a Href="index.php?page=' . $this->page . '"><li>' . $this->label . '</li></a>';
     }
 }

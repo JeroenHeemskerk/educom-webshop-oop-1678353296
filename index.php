@@ -4,15 +4,16 @@
 // Main App
 // =================================================================
 
-include_once 'validations.php';
-include_once 'session_manager.php';
-include_once 'products_service.php';
+// include_once 'validations.php';
+// include_once 'products_service.php';
 
 require_once("controllers/page-controller.php");
+require_once("models/page-model.php");
 
 session_start();
 
-$controller = new PageController();
+$pageModel = new PageModel(NULL);
+$controller = new PageController($pageModel);
 $controller->handleRequest();
 
 
@@ -108,18 +109,7 @@ $controller->handleRequest();
 //         default:
 //             $page = 'unknown';
 //     }
-//     $data['menu'] = array('home' => 'Home', 'about' => 'About', 'contact' => 'Contact', 'webshop' => 'Webshop', 'topfive' => 'Top Five Products');
-
-//     if (isUserLoggedIn()) {
-//         $data['menu']['logout'] = "Logout " . getLoggedInUserName();
-//         $data['menu']['changepassword'] = "Change Password ";
-//         $data['menu']['shoppingcart'] = "Shopping Cart ";
-//     } else {
-//         $data['menu']['register'] = "Register";
-//         $data['menu']['login'] = "Login";
-//     }
-//     $data['page'] = $page;
-//     return $data;
+//     
 // }
 
 // =================================================================

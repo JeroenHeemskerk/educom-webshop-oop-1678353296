@@ -1,48 +1,52 @@
 <?php
 
-function logUserIn($data)
+class SessionManager
 {
-    $_SESSION['username'] = $data['name'];
-    $_SESSION['userid'] = $data['userid'];
-    $_SESSION['shoppingcart'] = array();
-}
 
-function getLoggedInUserId()
-{
-    return $_SESSION['userid'];
-}
+    public function logUserIn($data)
+    {
+        $_SESSION['username'] = $data['name'];
+        $_SESSION['userid'] = $data['userid'];
+        $_SESSION['shoppingcart'] = array();
+    }
 
-function getLoggedInUserName()
-{
-    return $_SESSION['username'];
-}
+    public function getLoggedInUserId()
+    {
+        return $_SESSION['userid'];
+    }
 
-function logUserOut()
-{
-    session_unset();
-}
+    public function getLoggedInUserName()
+    {
+        return $_SESSION['username'];
+    }
 
-function isUserLoggedIn()
-{
-    return isset($_SESSION['username']);
-}
+    public function logUserOut()
+    {
+        session_unset();
+    }
 
-function getShoppingcart()
-{
-    return $_SESSION['shoppingcart'];
-}
+    public function isUserLoggedIn()
+    {
+        return isset($_SESSION['username']);
+    }
 
-function updateShoppingCart($productId, $quantity)
-{
-    $_SESSION['shoppingcart'][$productId] = $quantity;
-}
+    public function getShoppingcart()
+    {
+        return $_SESSION['shoppingcart'];
+    }
 
-function removeFromShoppingcart($productId)
-{
-    unset($_SESSION['shoppingcart'][$productId]);
-}
+    public function updateShoppingCart($productId, $quantity)
+    {
+        $_SESSION['shoppingcart'][$productId] = $quantity;
+    }
 
-function emptyShoppingCart()
-{
-    $_SESSION['shoppingcart'] = array();
+    public function removeFromShoppingcart($productId)
+    {
+        unset($_SESSION['shoppingcart'][$productId]);
+    }
+
+    public function emptyShoppingCart()
+    {
+        $_SESSION['shoppingcart'] = array();
+    }
 }
