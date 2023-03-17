@@ -3,11 +3,11 @@
 class SessionManager
 {
 
-    public function logUserIn($data)
+    public function logUserIn($name, $id)
     {
-        $_SESSION['username'] = $data['name'];
-        $_SESSION['userid'] = $data['userid'];
-        $_SESSION['shoppingcart'] = array();
+        $_SESSION['username'] = $name;
+        $_SESSION['userid'] = $id;
+        $_SESSION['shoppingcart'] = array();       
     }
 
     public function getLoggedInUserId()

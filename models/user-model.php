@@ -1,18 +1,22 @@
 <?php
 
 require_once "page-model.php";
+require_once "db_repository.php";
 
 define("SALUTATIONS", array("mrs" => "Mrs.", "ms" => "Ms.", "mx" => "Mx.", "mr" => "Mr."));
 define("COM_PREFS", array("phone" => "phone", "email" => "email"));
+
+define("RESULT_OK", 0);
+define("RESULT_WRONG", -1);
 
 class UserModel extends PageModel
 {
 
     public $salutation, $salutationErr, $name, $nameErr, $email, $emailErr, $password, $passwordErr,
         $confirmPassword, $confirmPasswordErr, $phone, $phoneErr, $contactOption, $contactOptionErr, $message, $messageErr,
-        $genericErr, $result = "";
+        $newPassword, $newPasswordErr, $genericErr, $result = "";
 
-    private $userId = 0;
+    public $userId = 0;
     public $valid = false;
 
     public function __construct($pagemodel)
@@ -72,12 +76,12 @@ class UserModel extends PageModel
             // check if all data are valid       
             if (empty($this->emailErr) && empty($this->passwordErr)) {
                 try {
-                    $this->authenticateUser($this->email, $this->password);
-                    switch ($this->result) {
+                    $authenticate  = $this->authenticateUser($this->email, $this->password);
+                    switch ($authenticate['result']) {
                         case RESULT_OK:
                             $this->valid = true;
-                            // $this->name = $this->user->name;
-                            // $this->userId = $this->user->id;
+                            $this->name = $authenticate['user']['name'];
+                            $this->userId = $authenticate['user']['id'];
                             break;
                         case RESULT_WRONG:
                             $this->genericErr = "Email does not exist or
@@ -96,9 +100,9 @@ class UserModel extends PageModel
     {
         $user = findUserByEmail($email);
         if (empty($user) || $user['password'] != $password) {
-            return $this->result = RESULT_WRONG;
+            return array("result" => RESULT_WRONG);
         }
-        return $this->result = RESULT_OK;
+        return array("result" => RESULT_OK, "user" => $user);
     }
 
     public function doLoginUser()
@@ -131,7 +135,7 @@ class UserModel extends PageModel
             if (empty($this->phone)) {
                 $this->phoneErr = "Phone is required";
             }
-            
+
             if (empty($this->contactOption)) {
                 $this->contactOptionErr = "Contact option is required";
             } else if (!array_key_exists($this->contactOption, COM_PREFS)) {
@@ -203,5 +207,58 @@ class UserModel extends PageModel
     function storeUser($email, $name, $password)
     {
         saveUser($email, $name, $password);
+    }
+
+    function authenticateCurrentUser($id, $password)
+    {
+        $user = findUserById($id);
+        debug_to_console($password . "test password");
+        if (empty($user) || $user['password'] != $password) {
+            return array("result" => RESULT_WRONG);
+        }
+
+        return array("result" => RESULT_OK, "user" => $user);
+    }
+
+    function validateChangePassword()
+    {
+
+        if ($this->isPost) {
+
+            $this->validatePassword();
+            $this->newPassword = $this->test_input($this->getPostVar("newPassword"));
+
+
+            if (empty($this->newPassword)) {
+                $this->newPasswordErr = "New password is required";
+            }
+
+            if (
+                empty($this->newPasswordErr)
+            ) {
+                try {
+                    $authenticate =
+                        $this->authenticateCurrentUser($this->sessionManager->getLoggedInUserId(), $this->password);
+                    switch ($authenticate['result']) {
+                        case RESULT_OK:
+                            $this->valid = true;
+                            $this->password = $authenticate['user']['password'];
+                            $this->userId = $authenticate['user']['id'];
+                            break;
+                        case RESULT_WRONG:
+                            $this->passwordErr = "Password does not match";
+                            break;
+                    }
+                } catch (Exception $e) {
+                    $this->genericErr = "There is a technical issue, please try again later.";
+                    debug_to_console("Authentication failed: " . $e->getMessage());
+                }
+            }
+        }
+    }
+
+    function updatePassword($id, $password)
+    {
+        changePassword($id, $password);
     }
 }

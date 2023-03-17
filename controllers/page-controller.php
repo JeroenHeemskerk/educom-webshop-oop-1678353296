@@ -1,5 +1,7 @@
 <?php
 
+//require_once("user_service.php");
+
 class PageController
 {
     private $model;
@@ -38,6 +40,35 @@ class PageController
                 $this->model->validateContact();
                 if ($this->model->valid) {
                     $this->model->setPage('thanks');
+                }
+                break;
+            case "login":
+                require_once("models/user-model.php");
+                $this->model = new UserModel($this->model);
+                $this->model->validateLogin();
+                if ($this->model->valid) {
+                    $this->model->doLoginUser();
+                    $this->model->setPage("home");
+                }
+                break;
+            case "logout":
+                require_once("models/user-model.php");
+                $this->model = new UserModel($this->model);
+                $this->model->doLogoutUser();
+                $this->model->setPage("home");
+                break;
+            case 'changepassword':
+                require_once("models/user-model.php");
+                $this->model = new UserModel($this->model);
+                $this->model->validateChangePassword();
+                if ($this->model->valid) {
+                    try {
+                        $this->model->updatePassword($this->model->userId, $this->model->newPassword);
+                        $this->model->setPage('home');
+                    } catch (Exception $e) {
+                        echo "Password could not be changed due to a technical error";
+                        debug_to_console("Change user password failed" . $e->getMessage());
+                    }
                 }
                 break;
         }

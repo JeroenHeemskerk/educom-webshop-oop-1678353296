@@ -22,6 +22,7 @@ class PageModel
             $this->page = $copy->page;
             $this->isPost = $copy->isPost;
             $this->menu = $copy->menu;
+            $this->sessionManager = $copy->sessionManager;
             $this->genericErr = $copy->genericErr;
         }
     }
@@ -65,15 +66,15 @@ class PageModel
         $this->menu['contact'] = new MenuItem('contact', 'Contact');
         $this->menu['webshop'] = new MenuItem('webshop', 'Webshop');
         $this->menu['topfive'] = new MenuItem('topfive', 'Top Five');
-        // if ($this->sessionManager->isUserLoggedIn()) {
-        //     $this->menu['shoppingcart'] = new MenuItem('shoppingcart', 'Shopping Cart');
-        //     $this->menu['logout'] = new MenuItem('logout', 'Logout ' .
-        //         $this->sessionManager->getLoggedInUsername());
-        //     $this->menu['changepassword'] = new MenuItem('changepassword', 'Change Password');
-        // } else {
-        $this->menu['login'] = new MenuItem('login', 'Login');
-        $this->menu['register'] = new MenuItem('register', 'Register');
-        // }
+        if ($this->sessionManager->isUserLoggedIn()) {
+            $this->menu['shoppingcart'] = new MenuItem('shoppingcart', 'Shopping Cart');
+            $this->menu['logout'] = new MenuItem('logout', 'Logout ' .
+                $this->sessionManager->getLoggedInUsername());
+            $this->menu['changepassword'] = new MenuItem('changepassword', 'Change Password');
+        } else {
+            $this->menu['login'] = new MenuItem('login', 'Login');
+            $this->menu['register'] = new MenuItem('register', 'Register');
+        }
         echo '<ul>';
     }
 }
