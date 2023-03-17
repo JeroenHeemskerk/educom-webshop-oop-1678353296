@@ -159,7 +159,6 @@ class UserModel extends PageModel
     function validateRegistration()
     {
 
-
         if ($this->isPost) {
 
             $this->validateName();
@@ -184,7 +183,7 @@ class UserModel extends PageModel
                         $this->emailErr = "An account with this email is already in use";
                     }
 
-                    if ($this->emailErr === "") {
+                    if (empty($this->emailErr)) {
                         $this->valid = true;
                     }
                 } catch (Exception $e) {

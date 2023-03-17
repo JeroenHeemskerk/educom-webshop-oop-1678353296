@@ -71,6 +71,21 @@ class PageController
                     }
                 }
                 break;
+            case 'register':
+                require_once("models/user-model.php");
+                $this->model = new UserModel($this->model);
+                $this->model->validateRegistration();
+                if ($this->model->valid) {                    
+                    try {
+                        $this->model->storeUser($this->model->email, $this->model->name, $this->model->password);
+                        //$this->model = new UserModel($this->model);
+                        $this->model->setPage('login');
+                    } catch (Exception $e) {
+                        echo "Name could not be stored due to a technical error";
+                        debug_to_console("Store user failed" . $e->getMessage());
+                    }
+                }
+                break;
         }
     }
 
