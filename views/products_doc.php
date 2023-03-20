@@ -7,20 +7,19 @@ abstract class ProductsDoc extends BasicDoc
 {
     protected function addAction($nextpage, $button, $action, $productId = NULL, $name = NULL, $addquantity = 0)
     {
-        if (true) {
+        if ($this->model->canOrder) {
             echo '<div class="form-style-3">
-            <form method="post" action="index.php" enctype="multipart/form-data">';
+                <form method="post" action="index.php" enctype="multipart/form-data">';
             echo '<input type="hidden" name="action" value="' . $action . '">' . PHP_EOL;
-            if ($productId) {
+            if (!empty($productId)) {
                 echo '<input type="hidden" name="id" value="' . $productId . '">' . PHP_EOL;
             }
-            if ($name) {
+            if (!empty($name)) {
                 echo '<input type="hidden" name="name" value="' . $name . '">' . PHP_EOL;
             }
             echo '<input type="hidden" name="page" value="' . $nextpage . '">' . PHP_EOL;
             if ($addquantity !== 0) {
-                $cart = getShoppingcart();
-                $quantity = ((float) $addquantity + (float) getArrayVar($cart, $productId, 0));
+                $quantity = ((float) $addquantity + (float) $this->model->getArrayVar($this->model->cart, $productId, 0));
                 echo '<input type="hidden" name="quantity" value="' . $quantity . '">' . PHP_EOL;
                 if ($quantity == 0) {
                     echo '<input type="hidden" name="action" value="removeFromShoppingcart">' . PHP_EOL;

@@ -1,7 +1,5 @@
 <?php
 
-//require_once("user_service.php");
-
 class PageController
 {
     private $model;
@@ -18,21 +16,28 @@ class PageController
         $this->showResponsePage();
     }
 
+    // =================================================================
     // from client
+    // =================================================================
+
     private function getRequest()
     {
         $this->model->getRequestedPage();
     }
 
+    // =================================================================
     // business flow logic
+    // =================================================================
+
     private function processRequest()
     {
         switch ($this->model->page) {
             case "home":
+                require_once("models/shop-model.php");
+                $this->model = new ShopModel($this->model);
+                $this->model->handleActions();
+                break;
             case "about":
-                // require_once("models/page-model.php");
-                // $this->model = new PageModel($this->model);
-                //$this->model->handleActions();
                 break;
             case 'contact':
                 require_once("models/user-model.php");
@@ -75,7 +80,7 @@ class PageController
                 require_once("models/user-model.php");
                 $this->model = new UserModel($this->model);
                 $this->model->validateRegistration();
-                if ($this->model->valid) {                    
+                if ($this->model->valid) {
                     try {
                         $this->model->storeUser($this->model->email, $this->model->name, $this->model->password);
                         //$this->model = new UserModel($this->model);
@@ -86,10 +91,51 @@ class PageController
                     }
                 }
                 break;
+            case 'webshop':
+                require_once("models/shop-model.php");
+                $this->model = new ShopModel($this->model);
+                $this->model->handleActions();
+                $this->model->getWebshopProducts();
+                break;
+            case 'shoppingcart':
+                require_once("models/shop-model.php");
+                $this->model = new ShopModel($this->model);
+                $this->model->handleActions();
+                $this->model->getShoppingcartProducts();
+                break;
+            case 'productdetail':
+                //             $data = handleActions();
+                //             $id = getUrlVar("id");
+                //             $data = array_merge($data, getProductDetails($id));
+                break;
+            case 'topfive':
+                //             $data = getTopProducts();
+                break;
+            case 'addnewproduct':
+                //             $data = validateAddProduct();
+                //             if ($data['valid']) {
+                //                 try {
+                //                     storeNewProduct(
+                //                         $data['name'],
+                //                         $data['description'],
+                //                         $data['price'],
+                //                         $data['filename_img']
+                //                     );
+                //                     $page = 'webshop';
+                //                     $data = array_merge($data, getWebshopProducts());
+                //                 } catch (Exception $e) {
+                //                     $data['genericErr'] = "Product could not be stored due to a technical error";
+                //                     debug_to_console("Store product failed" . $e->getMessage());
+                //                 }
+                //             }
+                break;
         }
     }
 
+    // =================================================================
     // to client: presentation layer
+    // =================================================================
+
     private function showResponsePage()
     {
         try {
@@ -112,6 +158,10 @@ class PageController
         }
     }
 }
+
+// =================================================================
+// Logging
+// =================================================================
 
 function debug_to_console($data)
 {

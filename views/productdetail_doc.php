@@ -5,7 +5,7 @@ require_once "products_doc.php";
 
 class ProductDetailDoc extends ProductsDoc
 {
-    protected function showContent($data)
+    protected function showContent()
     {
         if ($data['product']) {
             echo '<div>';

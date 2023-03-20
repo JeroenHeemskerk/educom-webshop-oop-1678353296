@@ -5,7 +5,7 @@ include_once "products_doc.php";
 
 class TopFiveDoc extends ProductsDoc
 {
-    protected function showContent($data)
+    protected function showContent()
     {
         foreach ($data['products'] as $product) {
             echo '<div class="product"><a href="index.php?page=productdetail&id=' . $product['id'] . '">';

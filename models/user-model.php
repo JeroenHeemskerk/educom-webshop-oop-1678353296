@@ -1,6 +1,5 @@
 <?php
 
-require_once "page-model.php";
 require_once "db_repository.php";
 
 define("SALUTATIONS", array("mrs" => "Mrs.", "ms" => "Ms.", "mx" => "Mx.", "mr" => "Mr."));
@@ -259,5 +258,10 @@ class UserModel extends PageModel
     function updatePassword($id, $password)
     {
         changePassword($id, $password);
+    }
+
+    function isAdministrator($id)
+    {
+        return checkIfAdmin($id);
     }
 }

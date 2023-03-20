@@ -6,11 +6,11 @@ require_once "products_doc.php";
 class ShoppingCartDoc extends ProductsDoc
 {
 
-    protected function showContent($data)
+    protected function showContent()
     {
         echo '<class="products">';
-        if (($data['shoppingcartproducts'])) {
-            foreach ($data['shoppingcartproducts'] as $product) {
+        if (!empty($this->model->shoppingcartproducts)) {
+            foreach ($this->model->shoppingcartproducts as $product) {
                 echo '<class="product"><a href="index.php?page=productdetail&id=' .
                     $product['productId'] . '">';
                 echo '<h2>' . $product['name'] . '</h2>';
@@ -43,11 +43,11 @@ class ShoppingCartDoc extends ProductsDoc
                 );
             }
             echo '<div class="total">';
-            echo '<p>Total: &euro;' . $data['total'] .  '</p>';
-            addAction('home', 'ORDER', 'order');
+            echo '<p>Total: &euro;' . $this->model->total .  '</p>';
+            $this->addAction('home', 'ORDER', 'order');
             echo '</div> ' . PHP_EOL;
         } else {
-            echo '<p>' . $data['genericErr'] . '</p>';
+            echo '<p>' . $this->model->genericErr . '</p>';
             echo '<p>No products in shopping cart</p>';
         }
     }
