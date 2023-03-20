@@ -83,7 +83,6 @@ class PageController
                 if ($this->model->valid) {
                     try {
                         $this->model->storeUser($this->model->email, $this->model->name, $this->model->password);
-                        //$this->model = new UserModel($this->model);
                         $this->model->setPage('login');
                     } catch (Exception $e) {
                         echo "Name could not be stored due to a technical error";
@@ -104,9 +103,11 @@ class PageController
                 $this->model->getShoppingcartProducts();
                 break;
             case 'productdetail':
-                //             $data = handleActions();
-                //             $id = getUrlVar("id");
-                //             $data = array_merge($data, getProductDetails($id));
+                require_once("models/shop-model.php");
+                $this->model = new ShopModel($this->model);
+                $this->model->handleActions();
+                $id = $this->model->getUrlVar("id");                
+                $this->model->getProductDetails($id);
                 break;
             case 'topfive':
                 //             $data = getTopProducts();

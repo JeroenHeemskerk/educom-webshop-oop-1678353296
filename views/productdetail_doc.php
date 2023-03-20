@@ -7,24 +7,24 @@ class ProductDetailDoc extends ProductsDoc
 {
     protected function showContent()
     {
-        if ($data['product']) {
+        if ($this->model->product) {
             echo '<div>';
-            echo '<h2>' . $data['product']['name'] . '</h2>';
-            echo '<img src="Images/' . $data['product']['filename_img'] .
-                '" alt="' . $data['product']['name'] . '" width="150 height="300"><br><br>';
-            echo '<p>Description: ' . $data['product']['description'] . '</p><br><br>';
-            echo '<p>Price: &euro;' . $data['product']['price'] . '</p></a>';
+            echo '<h2>' . $this->model->product['name']  . '</h2>';
+            echo '<img src="Images/' . $this->model->product['filename_img'] .
+                '" alt="' . $this->model->product['name']  . '" width="150 height="300"><br><br>';
+            echo '<p>Description: ' . $this->model->product['description'] . '</p><br><br>';
+            echo '<p>Price: &euro;' . $this->model->product['price'] . '</p></a>';
             $this->addAction(
                 'shoppingcart',
                 'Add to Shopping Cart',
                 'updateShoppingCart',
-                $data['product']['id'],
-                $data['product']['name'],
+                $this->model->product['id'],
+                $this->model->product['name'],
                 1
             );
             echo '</div>';
         }
 
-        echo '  <span class="error">' . $data['genericErr'] . '</span>';
+        echo '  <span class="error">' . $this->model->genericErr . '</span>';
     }
 }

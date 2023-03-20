@@ -99,4 +99,15 @@ class ShopModel extends PageModel
                 break;
         }
     }
+
+    function getProductDetails($productId)
+    {
+        try {
+            $this->product = findProductById($productId);
+        } catch (Exception $e) {
+            $this->genericErr = "Sorry, cannot show details at this moment.";
+            debug_to_console("findProductById failed  " . $e->getMessage());
+        }
+        return array("product" => $this->product, "genericErr" => $this->genericErr);
+    }
 }
