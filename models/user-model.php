@@ -89,7 +89,7 @@ class UserModel extends PageModel
                     }
                 } catch (Exception $e) {
                     $this->genericErr = "There is a technical issue, please try again later.";
-                    debug_to_console("Authentication failed: " . $e->getMessage());
+                    debugToConsole("Authentication failed: " . $e->getMessage());
                 }
             }
         }
@@ -187,7 +187,7 @@ class UserModel extends PageModel
                     }
                 } catch (Exception $e) {
                     $this->genericErr = "A technical issue occured.";
-                    debug_to_console("does email exist failed: " . $e->getMessage());
+                    debugToConsole("does email exist failed: " . $e->getMessage());
                 }
             }
         }
@@ -210,7 +210,7 @@ class UserModel extends PageModel
     function authenticateCurrentUser($id, $password)
     {
         $user = findUserById($id);
-        debug_to_console($password . "test password");
+        debugToConsole($password . "test password");
         if (empty($user) || $user['password'] != $password) {
             return array("result" => RESULT_WRONG);
         }
@@ -249,7 +249,7 @@ class UserModel extends PageModel
                     }
                 } catch (Exception $e) {
                     $this->genericErr = "There is a technical issue, please try again later.";
-                    debug_to_console("Authentication failed: " . $e->getMessage());
+                    debugToConsole("Authentication failed: " . $e->getMessage());
                 }
             }
         }
@@ -258,10 +258,5 @@ class UserModel extends PageModel
     function updatePassword($id, $password)
     {
         changePassword($id, $password);
-    }
-
-    function isAdministrator($id)
-    {
-        return checkIfAdmin($id);
     }
 }

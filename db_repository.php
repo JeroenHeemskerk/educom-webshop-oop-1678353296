@@ -55,7 +55,7 @@ function findUserById($id)
         }
         while ($row = mysqli_fetch_assoc($result)) {
             $user = $row;
-            debug_to_console($user);
+            debugToConsole($user);
         }
     } finally {
         mysqli_close($conn);
@@ -110,7 +110,7 @@ function checkIfAdmin($id)
         while ($row = mysqli_fetch_assoc($result)) {
             if ($row['isadmin'] == "yes") {
                 $isadmin = "true";
-                debug_to_console($row['isadmin']);
+                debugToConsole($row['isadmin']);
             };
         }
     } finally {

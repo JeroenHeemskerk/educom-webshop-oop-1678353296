@@ -118,7 +118,7 @@ class PageController
                 //                     $data = array_merge($data, getWebshopProducts());
                 //                 } catch (Exception $e) {
                 //                     $data['genericErr'] = "Product could not be stored due to a technical error";
-                //                     debug_to_console("Store product failed" . $e->getMessage());
+                //                     debugToConsole("Store product failed" . $e->getMessage());
                 //                 }
                 //             }
                 break;
@@ -137,9 +137,9 @@ class PageController
             $class = "{$current_page}Doc";
             $view = new $class($this->model);
         } else {
-            debug_to_console("unknown page: " . $current_page);
-            require_once("views/home_doc.php");
-            $view = new HomeDoc($this->model);
+            // debugToConsole("unknown page: " . $current_page);
+            // require_once("views/home_doc.php");
+            // $view = new HomeDoc($this->model);
         }
         $view->show();
     }
@@ -149,7 +149,7 @@ class PageController
 // Logging
 // =================================================================
 
-function debug_to_console($data)
+function debugToConsole($data)
 {
     $output = $data;
     if (is_array($output))

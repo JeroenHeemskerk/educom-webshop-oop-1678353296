@@ -6,8 +6,6 @@ require_once "db_repository.php";
 class ShopModel extends PageModel
 {
     public $products = '';
-    public $genericErr = NULL;
-    public $data = '';
     public $product = array();
     public $action = '';
     public $productId = '';
@@ -27,6 +25,7 @@ class ShopModel extends PageModel
         PARENT::__construct($pageModel);
     }
 
+    //Override
     public function createMenuArr()
     {
         $this->canOrder = $this->sessionManager->isUserLoggedIn();
@@ -45,7 +44,7 @@ class ShopModel extends PageModel
             $this->products = getAllProducts();
         } catch (Exception $e) {
             $this->genericErr = "Sorry, cannot show products at this moment.";
-            debug_to_console("GetAllProducts failed  " . $e->getMessage());
+            debugToConsole("GetAllProducts failed  " . $e->getMessage());
         }
         return array("products" => $this->products, "genericErr" => $this->genericErr);
     }
@@ -69,7 +68,7 @@ class ShopModel extends PageModel
             }
         } catch (Exception $e) {
             $this->genericErr = "Sorry, cannot show products at this moment.";
-            debug_to_console("GetShoppingcartProducts failed  " . $e->getMessage());
+            debugToConsole("GetShoppingcartProducts failed  " . $e->getMessage());
         }
     }
 
@@ -107,7 +106,7 @@ class ShopModel extends PageModel
             $this->product = findProductById($productId);
         } catch (Exception $e) {
             $this->genericErr = "Sorry, cannot show details at this moment.";
-            debug_to_console("findProductById failed  " . $e->getMessage());
+            debugToConsole("findProductById failed  " . $e->getMessage());
         }
         return array("product" => $this->product, "genericErr" => $this->genericErr);
     }
@@ -119,7 +118,7 @@ class ShopModel extends PageModel
             $this->topFiveProducts = getTopFive();
         } catch (Exception $e) {
             $this->genericErr = "Sorry, cannot show top products at this moment.";
-            debug_to_console("getTopProducts failed  " . $e->getMessage());
+            debugToConsole("getTopProducts failed  " . $e->getMessage());
         }
     }
 
