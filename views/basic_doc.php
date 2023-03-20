@@ -94,6 +94,11 @@ class BasicDoc extends HtmlDoc
         echo '<p>Content</p>';
     }
 
+    protected function showGenericErr()
+    {
+        echo '<p>' . $this->model->genericErr . '</p>';
+    }
+
     function showFooter()
     {
         echo '
@@ -113,6 +118,7 @@ class BasicDoc extends HtmlDoc
         $this->showHeader($this->model->page);
         $this->showMenu();
         $this->showContent();
+        $this->showGenericErr();
         $this->showFooter();
     }
 

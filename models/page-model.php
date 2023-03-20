@@ -78,8 +78,5 @@ class PageModel
         }
         echo '<ul>';
     }
-
-    public function isAdmin()
-    {
-    }
+    
 }

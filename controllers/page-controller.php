@@ -66,28 +66,18 @@ class PageController
                 require_once("models/user-model.php");
                 $this->model = new UserModel($this->model);
                 $this->model->validateChangePassword();
+                $this->model->updatePassword($this->model->userId, $this->model->newPassword);
                 if ($this->model->valid) {
-                    try {
-                        $this->model->updatePassword($this->model->userId, $this->model->newPassword);
-                        $this->model->setPage('home');
-                    } catch (Exception $e) {
-                        echo "Password could not be changed due to a technical error";
-                        debug_to_console("Change user password failed" . $e->getMessage());
-                    }
+                    $this->model->setPage('home');
                 }
                 break;
             case 'register':
                 require_once("models/user-model.php");
                 $this->model = new UserModel($this->model);
                 $this->model->validateRegistration();
+                $this->model->storeUser($this->model->email, $this->model->name, $this->model->password);
                 if ($this->model->valid) {
-                    try {
-                        $this->model->storeUser($this->model->email, $this->model->name, $this->model->password);
-                        $this->model->setPage('login');
-                    } catch (Exception $e) {
-                        echo "Name could not be stored due to a technical error";
-                        debug_to_console("Store user failed" . $e->getMessage());
-                    }
+                    $this->model->setPage('login');
                 }
                 break;
             case 'webshop':
@@ -106,7 +96,7 @@ class PageController
                 require_once("models/shop-model.php");
                 $this->model = new ShopModel($this->model);
                 $this->model->handleActions();
-                $id = $this->model->getUrlVar("id");                
+                $id = $this->model->getUrlVar("id");
                 $this->model->getProductDetails($id);
                 break;
             case 'topfive':

@@ -25,7 +25,7 @@ class WebshopDoc extends ProductsDoc
             );
             echo '</div></div></div>' . PHP_EOL;
         }
-        if ($this->model->isAdmin()) {
+        if ($this->model->allowedToAddOrEditProducts) {
             echo
             '<div class="form-style-3">         
              <fieldset>              
@@ -35,7 +35,6 @@ class WebshopDoc extends ProductsDoc
              </label>                                                           
              </fieldset>
              </div>';
-        }
-        echo '  <span class="error">' . $this->model->genericErr . '</span>';
+        }        
     }
 }

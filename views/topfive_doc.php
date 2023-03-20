@@ -13,7 +13,6 @@ class TopFiveDoc extends ProductsDoc
             echo '<img src="Images/' . $product['filename_img'] . '" alt="' . $product['name'] . '" width="60" height="80"></a>' . PHP_EOL;
             echo '<div class="text">';
             echo '</div></div>' . PHP_EOL;
-        }
-        echo '  <span class="error">' . $this->model->genericErr . '</span>';
+        }        
     }
 }

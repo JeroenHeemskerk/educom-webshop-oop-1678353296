@@ -48,8 +48,7 @@ abstract class FormsDoc extends BasicDoc
                 break;
         }
         echo '</label>';
-        echo '  <span class="error">' . $this->model->$error . '</span>';
-        echo '  <span class="error">' . $this->model->genericErr . '</span>';
+        echo '  <span class="error">' . $this->model->$error . '</span>';       
     }
 
     protected function showFormFieldSetEnd()

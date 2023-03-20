@@ -121,6 +121,9 @@ class ShopModel extends PageModel
             $this->genericErr = "Sorry, cannot show top products at this moment.";
             debug_to_console("getTopProducts failed  " . $e->getMessage());
         }
-    }    
+    }
 
+    function allowedToAddOrEditProducts()
+    {
+    }
 }

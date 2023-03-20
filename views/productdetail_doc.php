@@ -23,8 +23,6 @@ class ProductDetailDoc extends ProductsDoc
                 1
             );
             echo '</div>';
-        }
-
-        echo '  <span class="error">' . $this->model->genericErr . '</span>';
+        }        
     }
 }
