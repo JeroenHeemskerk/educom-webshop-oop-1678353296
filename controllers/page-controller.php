@@ -110,7 +110,9 @@ class PageController
                 $this->model->getProductDetails($id);
                 break;
             case 'topfive':
-                //             $data = getTopProducts();
+                require_once("models/shop-model.php");
+                $this->model = new ShopModel($this->model);
+                $this->model->getTopProducts();
                 break;
             case 'addnewproduct':
                 //             $data = validateAddProduct();

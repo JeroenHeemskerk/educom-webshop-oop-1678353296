@@ -10,6 +10,7 @@ class PageModel
     public $menu;
     public $errors = array();
     public $genericErr = NULL;
+    
     protected SessionManager $sessionManager;
 
     public function __construct($copy)
@@ -76,5 +77,9 @@ class PageModel
             $this->menu['register'] = new MenuItem('register', 'Register');
         }
         echo '<ul>';
+    }
+
+    public function isAdmin()
+    {
     }
 }

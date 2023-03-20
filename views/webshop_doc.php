@@ -7,7 +7,6 @@ class WebshopDoc extends ProductsDoc
 {
     protected function showContent()
     {
-        //include_once 'user_service.php';
         foreach ($this->model->products as $product) {
             echo '<div class="product"><a href="index.php?page=productdetail&id=' . $product['id'] . '">';
             echo '<h2>' . $product['name'] . '</h2>';
@@ -26,17 +25,17 @@ class WebshopDoc extends ProductsDoc
             );
             echo '</div></div></div>' . PHP_EOL;
         }
-        // if ($this->model->isUserLoggedIn() && isAdministrator($this->model->getLoggedInUserId()) == 'true') {
-        //     echo
-        //     '<div class="form-style-3">         
-        //      <fieldset>              
-        //      <label><div>
-        //      <a href="index.php?page=addnewproduct">add new product</a>
-        //      </div>
-        //      </label>                                                           
-        //      </fieldset>
-        //      </div>';
-        // }
+        if ($this->model->isAdmin()) {
+            echo
+            '<div class="form-style-3">         
+             <fieldset>              
+             <label><div>
+             <a href="index.php?page=addnewproduct">add new product</a>
+             </div>
+             </label>                                                           
+             </fieldset>
+             </div>';
+        }
         echo '  <span class="error">' . $this->model->genericErr . '</span>';
     }
 }

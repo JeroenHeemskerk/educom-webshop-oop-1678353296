@@ -14,25 +14,26 @@ class ShopModel extends PageModel
     public $quantity = '';
     public $userId = 0;
     public $shoppingcartproducts = array();
+    public $topFiveProducts = array();
     public $total = 0;
     public $shoppingcart = '';
     public $shoppingcartproduct = '';
     public $subtotal = '';
     public $canOrder = FALSE;
     public $cart = array();
-    //public $detail_id = '';
 
     public function __construct($pageModel)
     {
         PARENT::__construct($pageModel);
-
-        //$this->detail_id = $this->getUrlVar("id");
     }
 
     public function createMenuArr()
     {
         $this->canOrder = $this->sessionManager->isUserLoggedIn();
-        $this->cart = $this->sessionManager->getShoppingcart();
+        if ($this->canOrder) {
+            $this->cart = $this->sessionManager->getShoppingcart();
+        }
+
         parent::createMenuArr();
     }
 
@@ -110,4 +111,16 @@ class ShopModel extends PageModel
         }
         return array("product" => $this->product, "genericErr" => $this->genericErr);
     }
+
+    function getTopProducts()
+    {
+
+        try {
+            $this->topFiveProducts = getTopFive();
+        } catch (Exception $e) {
+            $this->genericErr = "Sorry, cannot show top products at this moment.";
+            debug_to_console("getTopProducts failed  " . $e->getMessage());
+        }
+    }    
+
 }
