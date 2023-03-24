@@ -4,11 +4,13 @@
 // Main App
 // =================================================================
 
-require_once("controllers/page-controller.php");
+require_once("cruds/crud.php");
 require_once("models/page-model.php");
+require_once("controllers/page-controller.php");
 
 session_start();
 
-$pageModel = new PageModel(NULL);
+$crud = new Crud();
+$pageModel = new PageModel(NULL, $crud);
 $controller = new PageController($pageModel);
 $controller->handleRequest();

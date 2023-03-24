@@ -12,8 +12,8 @@ class AddNewProductDoc extends FormsDoc
         $this->showFormFieldSetStart('Fill out this form to add a new product');
         $this->showFormField('name', 'Name', 'text');
         $this->showFormField('description', 'Description', 'text');
-        $this->showFormField('price', 'Price', 'text', );
-        $this->showFormField('filename_img', 'Image', 'file');
+        $this->showFormField('price', 'Price', 'text',);
+        $this->showFormField('filename_img', 'Image', 'text');
         $this->showFormFieldSetEnd();
         $this->showFormEnd('Add to webshop', 'addnewproduct');
     }

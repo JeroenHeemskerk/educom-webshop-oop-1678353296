@@ -44,9 +44,9 @@ class ShoppingCartDoc extends ProductsDoc
             }
             echo '<div class="total">';
             echo '<p>Total: &euro;' . $this->model->total .  '</p>';
-            $this->addAction('home', 'ORDER', 'order');
+            $this->addAction('shoppingcart', 'ORDER', 'order');
             echo '</div> ' . PHP_EOL;
-        } else {            
+        } else {
             echo '<p>No products in shopping cart</p>';
         }
     }

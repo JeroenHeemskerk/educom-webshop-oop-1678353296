@@ -34,14 +34,18 @@ class PageController
         switch ($this->model->page) {
             case "home":
                 require_once("models/shop-model.php");
-                $this->model = new ShopModel($this->model);
+                require_once("cruds/shop_crud.php");
+                $shopCrud = new ShopCrud($this->model->crud);
+                $this->model = new ShopModel($this->model, $shopCrud);
                 $this->model->handleActions();
                 break;
             case "about":
                 break;
             case 'contact':
                 require_once("models/user-model.php");
-                $this->model = new UserModel($this->model);
+                require_once("cruds/user_crud.php");
+                $userCrud = new UserCrud($this->model->crud);
+                $this->model = new UserModel($this->model, $userCrud);
                 $this->model->validateContact();
                 if ($this->model->valid) {
                     $this->model->setPage('thanks');
@@ -49,7 +53,9 @@ class PageController
                 break;
             case "login":
                 require_once("models/user-model.php");
-                $this->model = new UserModel($this->model);
+                require_once("cruds/shop_crud.php");
+                $userCrud = new UserCrud($this->model->crud);
+                $this->model = new UserModel($this->model, $userCrud);
                 $this->model->validateLogin();
                 if ($this->model->valid) {
                     $this->model->doLoginUser();
@@ -58,69 +64,80 @@ class PageController
                 break;
             case "logout":
                 require_once("models/user-model.php");
-                $this->model = new UserModel($this->model);
+                require_once("cruds/user_crud.php");
+                $userCrud = new UserCrud($this->model->crud);
+                $this->model = new UserModel($this->model, $userCrud);
                 $this->model->doLogoutUser();
                 $this->model->setPage("home");
                 break;
             case 'changepassword':
                 require_once("models/user-model.php");
-                $this->model = new UserModel($this->model);
+                require_once("cruds/user_crud.php");
+                $userCrud = new UserCrud($this->model->crud);
+                $this->model = new UserModel($this->model, $userCrud);
                 $this->model->validateChangePassword();
-                $this->model->updatePassword($this->model->userId, $this->model->newPassword);
                 if ($this->model->valid) {
+                    $this->model->updatePassword($this->model->userId, $this->model->newPassword);
                     $this->model->setPage('home');
                 }
                 break;
             case 'register':
                 require_once("models/user-model.php");
-                $this->model = new UserModel($this->model);
+                require_once("cruds/user_crud.php");
+                $userCrud = new UserCrud($this->model->crud);
+                $this->model = new UserModel($this->model, $userCrud);
                 $this->model->validateRegistration();
-                $this->model->storeUser($this->model->email, $this->model->name, $this->model->password);
                 if ($this->model->valid) {
+                    $this->model->storeUser();
                     $this->model->setPage('login');
                 }
                 break;
             case 'webshop':
                 require_once("models/shop-model.php");
-                $this->model = new ShopModel($this->model);
+                require_once("cruds/shop_crud.php");
+                $shopCrud = new ShopCrud($this->model->crud);
+                $this->model = new ShopModel($this->model, $shopCrud);
                 $this->model->handleActions();
                 $this->model->getWebshopProducts();
                 break;
             case 'shoppingcart':
                 require_once("models/shop-model.php");
-                $this->model = new ShopModel($this->model);
+                require_once("cruds/shop_crud.php");
+                $shopCrud = new ShopCrud($this->model->crud);
+                $this->model = new ShopModel($this->model, $shopCrud);
                 $this->model->handleActions();
-                $this->model->getShoppingcartProducts();
+                if ($this->model->valid) {
+                    $this->model->getWebshopProducts();
+                    $this->model->setPage("webshop");
+                } else {
+                    $this->model->getShoppingcartProducts();
+                }
                 break;
             case 'productdetail':
                 require_once("models/shop-model.php");
-                $this->model = new ShopModel($this->model);
+                require_once("cruds/shop_crud.php");
+                $shopCrud = new ShopCrud($this->model->crud);
+                $this->model = new ShopModel($this->model, $shopCrud);
                 $this->model->handleActions();
                 $id = $this->model->getUrlVar("id");
                 $this->model->getProductDetails($id);
                 break;
             case 'topfive':
                 require_once("models/shop-model.php");
-                $this->model = new ShopModel($this->model);
+                require_once("cruds/shop_crud.php");
+                $shopCrud = new ShopCrud($this->model->crud);
+                $this->model = new ShopModel($this->model, $shopCrud);
                 $this->model->getTopProducts();
                 break;
             case 'addnewproduct':
-                //             $data = validateAddProduct();
-                //             if ($data['valid']) {
-                //                 try {
-                //                     storeNewProduct(
-                //                         $data['name'],
-                //                         $data['description'],
-                //                         $data['price'],
-                //                         $data['filename_img']
-                //                     );
-                //                     $page = 'webshop';
-                //                     $data = array_merge($data, getWebshopProducts());
-                //                 } catch (Exception $e) {
-                //                     $data['genericErr'] = "Product could not be stored due to a technical error";
-                //                     debugToConsole("Store product failed" . $e->getMessage());
-                //                 }
-                //             }
+                require_once("models/shop-model.php");
+                require_once("cruds/shop_crud.php");
+                $shopCrud = new ShopCrud($this->model->crud);
+                $this->model = new ShopModel($this->model, $shopCrud);
+                $this->model->validateProduct();
+                if($this->model->valid) {
+                    $this->model->storeNewProduct();
+                }
                 break;
         }
     }
@@ -137,9 +154,9 @@ class PageController
             $class = "{$current_page}Doc";
             $view = new $class($this->model);
         } else {
-            // debugToConsole("unknown page: " . $current_page);
-            // require_once("views/home_doc.php");
-            // $view = new HomeDoc($this->model);
+            debugToConsole("unknown page: " . $current_page);
+            require_once("views/home_doc.php");
+            $view = new HomeDoc($this->model);
         }
         $view->show();
     }

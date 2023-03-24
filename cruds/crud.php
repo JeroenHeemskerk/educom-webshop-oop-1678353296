@@ -7,7 +7,7 @@ class Crud
     private $username = "webshop_Lydia";
     private $password = "shoplvg";
     private $dbname = "lydia_webshop";
-    private $pdo;
+    public $pdo;
 
     public function __construct()
     {
@@ -17,7 +17,7 @@ class Crud
         }
     }
 
-    private function prepareAndBind($sql, $params, $class = NULL)
+    private function prepareAndBind($sql, $params)
     {
 
         $stmt = $this->pdo->prepare($sql);
@@ -25,10 +25,7 @@ class Crud
             foreach ($params as $key => $value) {
                 $stmt->bindValue($key, $value);
             }
-
-            if ($class) { // To fetch class objects (User/Product)
-                $stmt->setFetchMode(PDO::FETCH_CLASS, $class);
-            }
+            $stmt->setFetchMode(PDO::FETCH_OBJ);
 
             $stmt->execute();
             return $stmt;
@@ -42,17 +39,17 @@ class Crud
         return $this->pdo->lastInsertId();
     }
 
-    public function readOneRow($sql, $params, $class)
+    public function readOneRow($sql, $params)
     {
-        $stmt = $this->prepareAndBind($sql, $params, $class);
+        $stmt = $this->prepareAndBind($sql, $params);
         $readObject = $stmt->fetch();
         // returns an object or class
         return $readObject;
     }
 
-    public function readMultipleRows($sql, $params, $class)
+    public function readMultipleRows($sql, $params)
     {
-        $stmt = $this->prepareAndBind($sql, $params, $class);
+        $stmt = $this->prepareAndBind($sql, $params);
         $readArray = $stmt->fetchAll();
         // returns an array of objects or classes
         return $readArray;
@@ -60,11 +57,11 @@ class Crud
 
     public function updateRow($sql, $params)
     {
-        $stmt = $this->prepareAndBind($sql, $params);
+        $this->prepareAndBind($sql, $params);
     }
 
     public function deleteRow($sql, $params)
     {
-        $stmt = $this->prepareAndBind($sql, $params);
+        $this->prepareAndBind($sql, $params);
     }
 }

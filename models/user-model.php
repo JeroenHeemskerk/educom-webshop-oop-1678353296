@@ -1,12 +1,12 @@
 <?php
 
-require_once "db_repository.php";
-
 define("SALUTATIONS", array("mrs" => "Mrs.", "ms" => "Ms.", "mx" => "Mx.", "mr" => "Mr."));
 define("COM_PREFS", array("phone" => "phone", "email" => "email"));
 
 define("RESULT_OK", 0);
 define("RESULT_WRONG", -1);
+
+include_once("./cruds/user_crud.php");
 
 class UserModel extends PageModel
 {
@@ -16,20 +16,13 @@ class UserModel extends PageModel
         $newPassword, $newPasswordErr, $genericErr, $result = "";
 
     public $userId = 0;
+    public $isadmin = NULL;
     public $valid = false;
 
-    public function __construct($pagemodel)
+    public function __construct($pagemodel, $userCrud)
     {
         PARENT::__construct($pagemodel);
-    }
-
-    // secure the user input
-    function test_input($data)
-    {
-        $data = trim($data);
-        $data = stripslashes($data);
-        $data = htmlspecialchars($data);
-        return $data;
+        $this->crud = $userCrud;
     }
 
     function validateName()
@@ -75,12 +68,13 @@ class UserModel extends PageModel
             // check if all data are valid       
             if (empty($this->emailErr) && empty($this->passwordErr)) {
                 try {
-                    $authenticate  = $this->authenticateUser($this->email, $this->password);
+                    $authenticate  = $this->authenticateUser();
                     switch ($authenticate['result']) {
                         case RESULT_OK:
                             $this->valid = true;
-                            $this->name = $authenticate['user']['name'];
-                            $this->userId = $authenticate['user']['id'];
+                            $this->name = $authenticate['user']->name;
+                            $this->userId = $authenticate['user']->id;
+                            $this->isadmin = $authenticate['user']->isadmin;
                             break;
                         case RESULT_WRONG:
                             $this->genericErr = "Email does not exist or
@@ -95,10 +89,10 @@ class UserModel extends PageModel
         }
     }
 
-    function authenticateUser($email, $password)
+    function authenticateUser()
     {
-        $user = findUserByEmail($email);
-        if (empty($user) || $user['password'] != $password) {
+        $user = $this->crud->readUserByEmail($this->email);
+        if (empty($user) || $user->password != $this->password) {
             return array("result" => RESULT_WRONG);
         }
         return array("result" => RESULT_OK, "user" => $user);
@@ -106,7 +100,7 @@ class UserModel extends PageModel
 
     public function doLoginUser()
     {
-        $this->sessionManager->logUserIn($this->name, $this->userId);
+        $this->sessionManager->logUserIn($this->name, $this->userId, $this->isadmin);
         $this->genericErr = "Login successful";
     }
 
@@ -172,7 +166,7 @@ class UserModel extends PageModel
             }
 
 
-            // Check if email is already in use, if not: create new user
+            // Check if email is already in use
 
             if (
                 empty($this->nameErr) && empty($this->emailErr) && empty($this->passwordErr) && empty($this->confirmPasswordErr)
@@ -195,23 +189,24 @@ class UserModel extends PageModel
 
     function doesEmailExist()
     {
-        if (empty(findUserByEmail($this->email))) {
+        $user = $this->crud->readUserByEmail($this->email);
+        if (empty($user)) {
             return false;
         } else {
             return true;
         };
     }
 
-    function storeUser($email, $name, $password)
+    function storeUser()
     {
-        saveUser($email, $name, $password);
+        $this->crud->createUser($this->email, $this->name, $this->password);
     }
 
-    function authenticateCurrentUser($id, $password)
+    function authenticateCurrentUser($id)
     {
-        $user = findUserById($id);
-        debugToConsole($password . "test password");
-        if (empty($user) || $user['password'] != $password) {
+        $user = $this->crud->readUserById($id);
+        debugToConsole($this->password . "test password");
+        if (empty($user) || $user->password != $this->password) {
             return array("result" => RESULT_WRONG);
         }
 
@@ -236,12 +231,12 @@ class UserModel extends PageModel
             ) {
                 try {
                     $authenticate =
-                        $this->authenticateCurrentUser($this->sessionManager->getLoggedInUserId(), $this->password);
+                        $this->authenticateCurrentUser($this->sessionManager->getLoggedInUserId());
                     switch ($authenticate['result']) {
                         case RESULT_OK:
                             $this->valid = true;
-                            $this->password = $authenticate['user']['password'];
-                            $this->userId = $authenticate['user']['id'];
+                            $this->password = $authenticate['user']->password;
+                            $this->userId = $authenticate['user']->id;
                             break;
                         case RESULT_WRONG:
                             $this->passwordErr = "Password does not match";
@@ -257,6 +252,6 @@ class UserModel extends PageModel
 
     function updatePassword($id, $password)
     {
-        changePassword($id, $password);
+        $this->crud->updateUser($id, NULL, NULL, $password);
     }
 }

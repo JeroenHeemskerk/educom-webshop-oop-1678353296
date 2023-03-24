@@ -10,22 +10,34 @@ class PageModel
     public $menu;
     public $errors = array();
     public $genericErr = NULL;
-    
+    public $crud;
+    public $isAdminObject = NULL;   
+
     protected SessionManager $sessionManager;
 
-    public function __construct($copy)
+    public function __construct($copy, $crud = NULL)
     {
-        if (empty($copy)) {
+        if (empty($copy) || $crud !== NULL) {
             // ==> First instance of PageModel
             $this->sessionManager = new SessionManager();
+            $this->crud = $crud;
         } else {
             // ==> Called from the constructor of an extended class.... 
             $this->page = $copy->page;
             $this->isPost = $copy->isPost;
             $this->menu = $copy->menu;
             $this->sessionManager = $copy->sessionManager;
+            $this->crud = $copy->crud;
             $this->genericErr = $copy->genericErr;
         }
+    }
+
+    public function test_input($data)
+    {
+        $data = trim($data);
+        $data = stripslashes($data);
+        $data = htmlspecialchars($data);
+        return $data;
     }
 
 
@@ -42,6 +54,16 @@ class PageModel
     function getArrayVar($array, $key, $default = '')
     {
         return isset($array[$key]) ? $array[$key] : $default;
+    }
+
+    function getObjectById($array, $id)
+    {
+
+        foreach ($array as $object) {
+            if ($id == $object->id) {
+                return $object;
+            }
+        }
     }
 
     function getPostVar($key)
@@ -78,5 +100,16 @@ class PageModel
         }
         echo '<ul>';
     }
-    
+
+    public function isAdmin()
+    {
+        if ($this->sessionManager->isUserLoggedIn()) {
+            if ($_SESSION['isadmin'] === 'yes') {
+                return true;
+            }
+            return false;
+        } else {
+            return false;
+        }
+    }
 }
