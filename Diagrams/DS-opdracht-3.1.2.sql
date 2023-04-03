@@ -1,0 +1,1 @@
+select distinct name from mhl_cities

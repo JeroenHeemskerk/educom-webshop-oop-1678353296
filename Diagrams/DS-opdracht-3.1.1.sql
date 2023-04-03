@@ -1,1 +1,1 @@
-select * from mhl_cities
+select name from mhl_cities
