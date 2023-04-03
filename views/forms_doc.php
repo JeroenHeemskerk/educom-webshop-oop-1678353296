@@ -20,7 +20,7 @@ abstract class FormsDoc extends BasicDoc
     protected function showFormField($field, $label, $type, $required = true, $options = null)
     {
         echo '<label for="' . $field . '"><span class="' .
-            ($required ? "required" : "optional") . '">' . $label . '*</span>';
+            ($required ? "required" : "optional") . '">' . $label . '</span>';
         $error = ($field . 'Err');
         switch ($type) {
 
@@ -48,7 +48,9 @@ abstract class FormsDoc extends BasicDoc
                 break;
         }
         echo '</label>';
-        echo '  <span class="error">' . $this->model->$error . '</span>';       
+        if ($type != 'hidden') {
+            echo '  <span class="error">' . $this->model->$error . '</span>';
+        }
     }
 
     protected function showFormFieldSetEnd()

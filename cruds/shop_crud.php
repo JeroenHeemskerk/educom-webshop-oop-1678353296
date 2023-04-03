@@ -27,7 +27,7 @@ class ShopCrud
     function readTopFive()
     {
 
-        $sql = "SELEC p.id, p.name, p.price, p.filename_img, SUM(op.quantity) AS quantity
+        $sql = "SELECT p.id, p.name, p.price, p.filename_img, SUM(op.quantity) AS quantity
         FROM products p
         LEFT JOIN order_products op ON p.id=op.productId
         LEFT JOIN orders o ON op.orderId=o.id
@@ -104,8 +104,22 @@ class ShopCrud
     {
         $sql = "INSERT INTO products (name, description, price, filename_img) 
         VALUES (:name, :description, :price, :filename_img)";
-        $params = array(':name' => $name, ':description' => $description, ':price' => $price, ':filename_img' => $filename_img);
-        $this->crud->createRow($sql, $params);
-        debugToConsole("insert new product");
+        $params = array(':name' => $name, ':description' => $description, ':price' => $price, ':filename_img' => "temp filename");
+        $id = $this->crud->createRow($sql, $params);
+        $this->updateProduct($id, $name, $description, $price, $filename_img, "temp filename");
+        return $id;
+    }
+
+    public function updateProduct($productId, $name, $description, $price, $filename_img, $oldfilename_img)
+    {
+        $sql = "UPDATE products SET name = :name, description = :description, price = :price" . (!empty($filename_img) ? ", filename_img = :filename_img" : "") . " WHERE id = :productId AND filename_img = :oldfilename_img";
+        $params = array(':productId' => $productId, ':name' => $name, ':description' => $description, ':price' => $price, ':oldfilename_img' => $oldfilename_img);
+        if (!empty($filename_img)) {
+            $params[':filename_img'] = $productId . "_" . $filename_img;
+        }
+        $rowcount = $this->crud->updateRow($sql, $params);
+        if ($rowcount != 1) {
+            throw new Exception('Update failed');
+        }
     }
 }

@@ -119,7 +119,7 @@ class PageController
                 $shopCrud = new ShopCrud($this->model->crud);
                 $this->model = new ShopModel($this->model, $shopCrud);
                 $this->model->handleActions();
-                $id = $this->model->getUrlVar("id");
+                $id = $this->model->getUrlVar("id", "0");
                 $this->model->getProductDetails($id);
                 break;
             case 'topfive':
@@ -135,8 +135,12 @@ class PageController
                 $shopCrud = new ShopCrud($this->model->crud);
                 $this->model = new ShopModel($this->model, $shopCrud);
                 $this->model->validateProduct();
-                if($this->model->valid) {
-                    $this->model->storeNewProduct();
+                if ($this->model->valid) {
+                    $id = $this->model->storeOrUpdateProduct();
+                    $this->model->uploadImageForProductWithID($id);
+                    $this->model->deleteOldImage();
+                    $this->model->getProductDetails($id);
+                    $this->model->setPage('productdetail');
                 }
                 break;
         }

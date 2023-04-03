@@ -16,9 +16,11 @@ class ShopModel extends PageModel
     public $priceErr;
     public $filename_img;
     public $filename_imgErr;
+    public $productIdErr;
+    public $oldfilenameimg;
     // ----------------------------------------------------------------    
     public $action = '';
-    public $productId = '';
+    public $productId = 0;
     public $quantity = '';
     public $userId = 0;
     public $shoppingcartproducts = array();
@@ -140,7 +142,10 @@ class ShopModel extends PageModel
 
     function validateProduct()
     {
+
         if ($this->isPost) {
+            $this->productId = $this->test_input($this->getPostVar('productId'));
+            $this->oldfilenameimg = $this->test_input($this->getPostVar('oldfilenameimg'));
             $this->name = $this->test_input($this->getPostVar("name"));
             if (empty($this->name)) {
                 $this->nameErr = "Name is required";
@@ -153,19 +158,94 @@ class ShopModel extends PageModel
             if (empty($this->price)) {
                 $this->priceErr = "Price is required";
             }
+            $this->validateImage();
 
-            $this->filename_img = $this->test_input($this->getPostVar("filename_img"));
-            if (empty($this->filename_img)) {
-                $this->filename_imgErr = "Image is required";
-            }
-            if (empty($this->nameErr) && empty($this->descriptionErr) && empty($this->priceErr) && empty($this->filename_imgErr)) {
+
+
+            if (empty($this->nameErr) && empty($this->descriptionErr) && empty($this->priceErr) && empty($this->filename_imgErr) && empty($this->genericErr)) {
                 $this->valid = true;
+                $this->genericSuccess = "Product was successfully added";
+            }
+        } else {
+            $this->productId = $this->test_input($this->getUrlVar('id', 0));
+            if ($this->productId != 0) {
+                $product = $this->crud->readProductById($this->productId);
+                $this->name = $product->name;
+                $this->oldfilenameimg = $product->filename_img;
+                $this->description = $product->description;
+                $this->price = $product->price;
             }
         }
     }
 
-    function storeNewProduct()
+    function uploadImageForProductWithID($id)
     {
-        $this->crud->createProduct($this->name, $this->description, $this->price, $this->filename_img);
+        if (!empty($this->filename_img)) {
+            $target_dir = "C:/xampp/htdocs/educom-webshop-oop/Images/";
+            $target_file = $target_dir . $id . "_" . basename($_FILES["filename_img"]["name"]);
+
+            $this->uploadImage($target_file);
+        }
+    }
+
+    function validateImage()
+    {
+
+        $this->filename_img = $this->test_input(basename($_FILES["filename_img"]["name"]));
+        if (empty($this->filename_img)) {
+            if ($this->productId == 0) {
+                $this->filename_imgErr = "Please provide an image";
+            }
+            return;
+        }
+        $target_dir = "C:/xampp/htdocs/educom-webshop-oop/Images/";
+        $target_file = $target_dir . $this->productId . "_" . $this->filename_img;
+        $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
+
+        //check extension
+        if (
+            $imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg"
+            && $imageFileType != "gif"
+        ) {
+            $this->genericErr = "Sorry, only JPG, JPEG, PNG & GIF files are allowed.";
+        }
+
+        // check file size
+        if ($_FILES["filename_img"]["size"] > 500000) {
+            $this->genericErr = "Sorry, your file is too large.";
+        }
+
+        if ((bool)getimagesize($_FILES["filename_img"]["tmp_name"]) == false) {
+            $this->genericErr = "Not an image.";
+        }
+    }
+
+    function uploadImage($target_file)
+    {
+
+        if (move_uploaded_file($_FILES["filename_img"]["tmp_name"], $target_file)) {
+        } else {
+            $this->genericErr = "There was an error uploading your file.";
+        }
+    }
+
+    function deleteOldImage()
+    {
+        if (!empty($this->filename_img) && !empty($this->oldfilenameimg)) {
+            $target_dir = "C:/xampp/htdocs/educom-webshop-oop/Images/";
+            
+            unlink($target_dir . $this->oldfilenameimg);
+        }
+    }
+
+    function storeOrUpdateProduct()
+    {
+        if ($this->productId == 0) {
+            $id = $this->crud->createProduct($this->name, $this->description, $this->price, $_FILES["filename_img"]["name"]);
+        } else {
+            $id = $this->productId;
+            $this->crud->updateProduct($this->productId, $this->name, $this->description, $this->price, $_FILES["filename_img"]["name"], $this->oldfilenameimg);
+        }
+        return $id;
     }
 }

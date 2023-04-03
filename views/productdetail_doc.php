@@ -24,5 +24,16 @@ class ProductDetailDoc extends ProductsDoc
             );
             echo '</div>';
         }
+        if ($this->model->isAdmin()) {
+            echo
+            '<div class="form-style-3">         
+             <fieldset>              
+             <label><div>
+             <a href="index.php?page=addnewproduct&id=' . $this->model->product->id . '">update product</a>
+             </div>
+             </label>                                                           
+             </fieldset>
+             </div>';
+        }
     }
 }

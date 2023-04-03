@@ -10,6 +10,7 @@ class PageModel
     public $menu;
     public $errors = array();
     public $genericErr = NULL;
+    public $genericSuccess = NULL;
     public $crud;
     public $isAdminObject = NULL;   
 
@@ -71,9 +72,9 @@ class PageModel
         return $this->getArrayVar($_POST, $key);
     }
 
-    function getUrlVar($key)
+    function getUrlVar($key, $default)
     {
-        return $this->getArrayVar($_GET, $key);
+        return $this->getArrayVar($_GET, $key, $default);
     }
 
     public function setPage($page)

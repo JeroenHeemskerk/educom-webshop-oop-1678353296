@@ -57,7 +57,8 @@ class Crud
 
     public function updateRow($sql, $params)
     {
-        $this->prepareAndBind($sql, $params);
+        $stmt = $this->prepareAndBind($sql, $params);
+        return $stmt->rowCount();
     }
 
     public function deleteRow($sql, $params)
