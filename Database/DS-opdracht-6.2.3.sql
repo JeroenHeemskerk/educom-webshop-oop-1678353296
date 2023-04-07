@@ -1,3 +1,4 @@
-SELECT DAYNAME(CONCAT(joindate)) 'Dag van de week' FROM mhl_suppliers
-JOIN mhl_hitcount
-ORDER BY 'Dag van de week'
+SELECT DAYNAME(joindate) day, COUNT(name) 
+FROM mhl_suppliers sup
+GROUP BY DAYNAME(joindate)
+ORDER BY dayofweek(joindate)
