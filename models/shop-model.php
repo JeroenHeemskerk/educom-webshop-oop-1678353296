@@ -4,7 +4,7 @@ include_once("./cruds/shop_crud.php");
 
 class ShopModel extends PageModel
 {
-    public $products = '';
+    public $products = array();
     public $product = array();
     public $valid = false;
     // values for new product
@@ -51,8 +51,7 @@ class ShopModel extends PageModel
 
     function getWebshopProducts()
     {
-        $this->products = array();
-        $this->genericErr = NULL;
+        
         try {
             $this->products = $this->crud->readAllProducts();
         } catch (Exception $e) {
@@ -103,13 +102,13 @@ class ShopModel extends PageModel
         $action = $this->getPostVar("action");
         switch ($action) {
             case 'updateShoppingCart':
-                $this->productId = $this->getPostVar("id");
-                $this->quantity = $this->getPostVar("quantity");
-                $this->sessionManager->updateShoppingCart($this->productId, $this->quantity);
+                $productId = $this->getPostVar("id");
+                $quantity = $this->getPostVar("quantity");
+                $this->sessionManager->updateShoppingCart($productId, $quantity);
                 break;
             case 'removeFromShoppingcart':
-                $this->productId  = $this->getPostVar("id");
-                $this->sessionManager->removeFromShoppingcart($this->productId);
+                $productId  = $this->getPostVar("id");
+                $this->sessionManager->removeFromShoppingcart($productId);
                 break;
             case 'order':
                 $this->userId = $this->sessionManager->getLoggedInUserId();
@@ -233,7 +232,7 @@ class ShopModel extends PageModel
     {
         if (!empty($this->filename_img) && !empty($this->oldfilenameimg)) {
             $target_dir = "C:/xampp/htdocs/educom-webshop-oop/Images/";
-            
+
             unlink($target_dir . $this->oldfilenameimg);
         }
     }
